@@ -1,0 +1,207 @@
+.button-mash-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.join-screen {
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.join-screen input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.join-screen input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.join-screen button {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.join-screen button:hover {
+  background: #45a049;
+}
+
+.race-screen {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.race-header {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.race-header h2 {
+  font-size: 36px;
+  margin: 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.waiting-message {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.winner-message {
+  text-align: center;
+  font-size: 32px;
+  color: #FFD700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.instructions {
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+  background: #fff3cd;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 2px solid #ffc107;
+}
+
+.instructions strong {
+  color: #ff5722;
+  font-size: 24px;
+}
+
+.race-track-container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+}
+
+.race-lane {
+  position: relative;
+  height: 100px;
+  margin-bottom: 20px;
+  background: #4CAF50;
+  border: 3px solid #2E7D32;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lane-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 48px,
+    rgba(255, 255, 255, 0.3) 48px,
+    rgba(255, 255, 255, 0.3) 50px
+  );
+}
+
+.finish-line {
+  position: absolute;
+  left: 95%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+
+.finish-line-sprite {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.player-character {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.1s ease-out;
+  z-index: 10;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.character-sprite {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+}
+
+.player-name {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 5px;
+  z-index: 5;
+}
+
+.player-position {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 5px;
+  z-index: 5;
+}
+

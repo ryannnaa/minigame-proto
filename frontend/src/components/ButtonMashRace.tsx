@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import "./ButtonMashRace.css";
 
 interface Player {
   id: string;
@@ -30,11 +31,11 @@ const ButtonMashRace: React.FC = () => {
         socket.emit("press", { roomId });
       }
     };
-    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("keyup", handleKeyPress);
 
     return () => {
       socket.off();
-      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("keyup", handleKeyPress);
     };
   }, [joined, started, winner, roomId]);
 
@@ -44,10 +45,16 @@ const ButtonMashRace: React.FC = () => {
     setJoined(true);
   };
 
+  // Sprites for player 1 and player 2
+  const characterSprites = [
+    "/sprites/player-1.png",
+    "/sprites/player-2.png",
+  ];
+  
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+    <div className="button-mash-container">
       {!joined ? (
-        <div>
+        <div className="join-screen">
           <input
             placeholder="Enter your name"
             value={name}
@@ -57,22 +64,54 @@ const ButtonMashRace: React.FC = () => {
             placeholder="Room ID"
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
-            style={{ marginLeft: "10px" }}
           />
           <button onClick={joinRace}>Join Race</button>
         </div>
       ) : (
-        <div>
-          <h2>Race!</h2>
-          {!started && <p>Waiting for another player to join...</p>}
-          {winner && <h3>{winner} wins! 🎉</h3>}
-          {started && !winner && <p>Press <strong>Spacebar</strong> to move!</p>}
+        <div className="race-screen">
+          {!started && (
+            <div className="waiting-message">
+              ⏳ Waiting for another player to join...
+            </div>
+          )}
+          
+          {winner && (
+            <div className="winner-message">
+              🎉 {winner} wins! 🏆
+            </div>
+          )}
+          
+          {started && !winner && (
+            <div className="instructions">
+              Press <strong>SPACEBAR</strong> to move! 🚀
+            </div>
+          )}
 
-          <div style={{ marginTop: "20px" }}>
-            {players.map((p) => (
-              <div key={p.id} style={{ marginBottom: "10px" }}>
-                <strong>{p.name}</strong>:{" "}
-                <progress value={p.position} max={100} style={{ width: "300px" }} />
+          <div className="race-track-container">
+            {players.map((p, index) => (
+              <div key={p.id} className="race-lane">
+                <div className="lane-background"></div>
+                {p.position < 100 && (
+                  <div className="finish-line">
+                    <img 
+                      src="/sprites/finish-line.png"
+                      alt="finish line"
+                      className="finish-line-sprite"
+                    />
+                  </div>
+                )}
+                <div className="player-name">{p.name}</div>
+                <div className="player-position">{Math.floor(p.position)}%</div>
+                <div 
+                  className="player-character"
+                  style={{ left: `${p.position * 0.95}%` }}
+                >
+                  <img 
+                    src={characterSprites[index % characterSprites.length]}
+                    alt={`${p.name}'s character`}
+                    className="character-sprite"
+                  />
+                </div>
               </div>
             ))}
           </div>
