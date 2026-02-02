@@ -12,7 +12,6 @@ interface Player {
 const socket: Socket = io("http://localhost:5001/minigame");
 
 const ButtonMashRace: React.FC = () => {
-  const [roomId, setRoomId] = useState("room1"); // simple default
   const [players, setPlayers] = useState<Player[]>([]);
   const [name, setName] = useState("");
   const [joined, setJoined] = useState(false);
@@ -24,11 +23,10 @@ const ButtonMashRace: React.FC = () => {
     socket.on("raceUpdate", (racePlayers: Player[]) => setPlayers(racePlayers));
     socket.on("raceStart", () => setStarted(true));
     socket.on("raceOver", (winnerName: string) => setWinner(winnerName));
-    socket.on("raceFull", () => alert("Race is full!"));
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (joined && started && !winner && e.code === "Space") {
-        socket.emit("press", { roomId });
+        socket.emit("press");
       }
     };
     window.addEventListener("keyup", handleKeyPress);
@@ -37,11 +35,11 @@ const ButtonMashRace: React.FC = () => {
       socket.off();
       window.removeEventListener("keyup", handleKeyPress);
     };
-  }, [joined, started, winner, roomId]);
+  }, [joined, started, winner]);
 
   const joinRace = () => {
     if (!name) return alert("Enter your name");
-    socket.emit("joinRace", { name, roomId });
+    socket.emit("joinRace", { name });
     setJoined(true);
   };
 
@@ -59,11 +57,6 @@ const ButtonMashRace: React.FC = () => {
             placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            placeholder="Room ID"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
           />
           <button onClick={joinRace}>Join Race</button>
         </div>

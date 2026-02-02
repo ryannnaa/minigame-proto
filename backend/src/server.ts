@@ -25,18 +25,23 @@ const races: Record<string, Race> = {};
 io.of("/minigame").on("connection", (socket) => {
   console.log("Player connected:", socket.id);
 
-  socket.on("joinRace", ({ name, roomId }) => {
-    // Create room if needed
-    if (!races[roomId]) {
+  socket.on("joinRace", ({ name }) => {
+    // Find first available room with less than 2 players
+    let roomId = null;
+    for (const [id, race] of Object.entries(races)) {
+      if (race.players.length < 2 && !race.started) {
+        roomId = id;
+        break;
+      }
+    }
+
+    // Create new room if no available room found
+    if (!roomId) {
+      roomId = `room_${Date.now()}`; // Generate unique room ID
       races[roomId] = { players: [], started: false, finished: false };
     }
 
     const race = races[roomId];
-
-    if (race.players.length >= 2) {
-      socket.emit("raceFull");
-      return;
-    }
 
     // ✅ JOIN ROOM FIRST
     socket.join(roomId);
@@ -48,6 +53,9 @@ io.of("/minigame").on("connection", (socket) => {
       position: 0,
     });
 
+    // Notify player which room they joined
+    socket.emit("raceJoined", race.players, roomId);
+
     // Sync state
     io.of("/minigame").to(roomId).emit("raceUpdate", race.players);
 
@@ -58,7 +66,11 @@ io.of("/minigame").on("connection", (socket) => {
     }
   });
 
-  socket.on("press", ({ roomId }) => {
+  socket.on("press", () => {
+    // Find which room this socket is in
+    const roomId = Array.from(socket.rooms).find(room => room !== socket.id);
+    if (!roomId) return;
+
     const race = races[roomId];
     if (!race || !race.started || race.finished) return;
 
@@ -81,6 +93,15 @@ io.of("/minigame").on("connection", (socket) => {
 
       const race = races[roomId];
       if (!race) continue;
+
+      // If race was active and someone disconnects, remaining player wins
+      if (race.started && !race.finished && race.players.length === 2) {
+        const remainingPlayer = race.players.find((p) => p.id !== socket.id);
+        if (remainingPlayer) {
+          race.finished = true;
+          io.of("/minigame").to(roomId).emit("raceOver", remainingPlayer.name);
+        }
+      }
 
       race.players = race.players.filter((p) => p.id !== socket.id);
       race.started = false;
