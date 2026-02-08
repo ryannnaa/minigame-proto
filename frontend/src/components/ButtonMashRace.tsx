@@ -53,6 +53,17 @@ const ButtonMashRace: React.FC = () => {
     <div className="button-mash-container">
       {!joined ? (
         <div className="join-screen">
+          <h2 className="join-title">🏁 Button Mash Race 🏁</h2>
+          
+          <div className="join-instructions">
+            <h3>How to Win:</h3>
+            <ol>
+              <li>Wait for an opponent to join (automatic matchmaking)</li>
+              <li>Press <strong>SPACEBAR</strong> as fast as you can!</li>
+              <li>First to reach the finish line wins! 🏆</li>
+            </ol>
+          </div>
+
           <input
             placeholder="Enter your name"
             value={name}
@@ -115,4 +126,3 @@ const ButtonMashRace: React.FC = () => {
 };
 
 export default ButtonMashRace;
-
